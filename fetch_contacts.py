@@ -14,7 +14,7 @@ try:
     sys.setdefaultencoding('utf8')
 except:
     pass
-    
+
 def fetch_contacts(username, password):
 
     logging.basicConfig(level=logging.DEBUG)

@@ -2,8 +2,14 @@
 # -*- coding: utf-8 -*-
 
 
-from scraper import fetch_contacts
-import wx
+from fetch_contacts import fetch_contacts
+import wx, sys, os
+
+
+def reexec_with_pythonw():
+    if sys.platform == 'darwin' and not sys.executable.endswith('MacOS/Python'):
+        print >> sys.stderr, 're-executing using pythonw'
+        os.execvp('pythonw',['pythonw',__file__] + sys.argv[1:])
 
 
 class MainWindow(wx.Dialog):
@@ -77,9 +83,10 @@ class FinalMessage(wx.Frame):
 
 def main():
 
+    reexec_with_pythonw()
     ex = wx.App()
     MainWindow(None)
-    FinalMessage(None)
+    #FinalMessage(None)
     ex.MainLoop()
 
 
