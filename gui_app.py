@@ -76,12 +76,10 @@ class FinalMessage(wx.Frame):
 
 
 def main():
-
     ex = wx.App()
     MainWindow(None)
     #FinalMessage(None)
     ex.MainLoop()
 
-
-if __name__ == '__main__':
-    main()
+# run the app
+main()
