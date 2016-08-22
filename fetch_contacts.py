@@ -4,9 +4,9 @@
 from __future__ import print_function
 from collections import defaultdict
 from grab import Grab
-import pandas as pd
-import logging
-import json
+from pandas import read_excel, DataFrame
+from json import loads
+from logging import basicConfig, DEBUG
 
 import sys
 try:
@@ -17,7 +17,7 @@ except:
 
 def fetch_contacts(username, password):
 
-    logging.basicConfig(level=logging.DEBUG)
+    basicConfig(level=DEBUG)
 
     g = Grab()
 
@@ -35,7 +35,7 @@ def fetch_contacts(username, password):
         html = g.doc.select('//*[@id="top_card-content"]').html()
         start = html.find('{')
         com = html[start:-10]
-        content = json.loads(com)["content"]
+        content = loads(com)["content"]
         res = content["ContactInfo"]["distance"]["numberOfConnections"]
         return res
 
@@ -52,7 +52,7 @@ def fetch_contacts(username, password):
     def process_comments(commented_line):
         start = commented_line.find('{')
         tmp = commented_line[start:-10]
-        res = json.loads(tmp)["content"]["page"]["voltron_unified_search_json"]["search"]
+        res = loads(tmp)["content"]["page"]["voltron_unified_search_json"]["search"]
         next_page_url = res["baseData"]["resultPagination"]["nextPage"]["pageURL"]
         results = res["results"]
         contacts = [ X.itervalues().next() for X in results ]
@@ -176,26 +176,26 @@ def fetch_contacts(username, password):
     path_to_desktop = os.path.expanduser('~/Desktop/')
     filename = path_to_desktop + 'contacts.xlsx'
     if os.path.isfile(filename):
-        saved_df = pd.read_excel(filename)
+        saved_df = read_excel(filename)
         saved_IDs = saved_df["id"].values
     else:
         saved_IDs = []
 
     contacts = []
-    #nb_pages = int((nb_contacts-1)/10 + 1)
-    nb_pages = 2
+    nb_pages = int((nb_contacts-1)/10 + 1)
+    #nb_pages = 2
     for i in range(nb_pages):
         comments = g.doc.select('//*[@id="voltron_srp_main-content"]').html()
         new_contacts, next_page_url = process_comments(comments)
-        #if i == nb_pages - 1:
-        #    new_contacts = filter(lambda contact: contact["distance"] == 1, new_contacts)
-        #new_contacts = filter(lambda contact: contact["id"] not in saved_IDs, new_contacts)
+        if i == nb_pages - 1:
+            new_contacts = filter(lambda contact: contact["distance"] == 1, new_contacts)
+        new_contacts = filter(lambda contact: contact["id"] not in saved_IDs, new_contacts)
         contacts.extend(new_contacts)
         g.go(next_page_url)
 
-    processed_contacts = [ process1contact(contact) for contact in contacts[:2] ]
+    processed_contacts = [ process1contact(contact) for contact in contacts ]
 
-    df = pd.DataFrame(processed_contacts)
+    df = DataFrame(processed_contacts)
     cols_sorted = ["lastname", "firstname", "email", "phone", "job_title", "main_skills",
             "other_skills", "current_company", "former_companies", "certifications",
             "projects", "graduation_year", "coursework", "summary", "experiences",
