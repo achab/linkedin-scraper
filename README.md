@@ -4,6 +4,6 @@
 ```python
 python fetch_contacts.py karim.benzema@realmadrid.com badgalriri
 ```
-The resulting dataframe is saved on the desktop.
+The resulted dataframe is saved on the desktop.
 
 Le scrapping n'aura jamais paru aussi simple !
