@@ -210,3 +210,17 @@ def fetch_contacts(username, password):
     df.to_excel(filename, sheet_name='sheet1', index=False)
 
     return processed_contacts
+
+if __name__ == "__main__":
+
+    import sys
+
+    assert len(sys.arg) == 2, "You should pass the arguments in command line.
+    Example: 'python fetch_contacts.py first.last@gmail.com password'"
+    
+    usr = sys.arg[0]
+    pwd = sys.arg[1]
+
+    fetch_contacts(usr,pwd)
+
+
