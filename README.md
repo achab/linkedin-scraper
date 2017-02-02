@@ -1,4 +1,4 @@
-## Scrapper bot to retrive data about your LinkedIn contacts 
+## Scrapper bot to retrieve data about your LinkedIn contacts 
 
 **Example:**
 ```python

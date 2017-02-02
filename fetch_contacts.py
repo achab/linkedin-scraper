@@ -31,7 +31,7 @@ def fetch_contacts(username, password):
         elem = g.doc('//li[@class="nav-item account-settings-tab"]/a')
         own_page = elem.attr('href')
         g.go(own_page)
-        g.doc.save('z.html')
+        #g.doc.save('z.html')
         html = g.doc.select('//*[@id="top_card-content"]').html()
         start = html.find('{')
         com = html[start:-10]
